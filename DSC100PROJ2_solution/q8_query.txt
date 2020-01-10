@@ -1,0 +1,6 @@
+(SELECT "Ath"."NOC", COUNT(("Ath"."NOC", "CM"."Region"))
+FROM public."Athlete" "Ath", public."Award" "A", public."CountryMapping" "CM"
+WHERE "A"."Medal" = 'Gold' AND "A"."Event" = 'Athletics Men''s Marathon' AND  "A"."new_ID" = "Ath"."new_ID" AND "Ath"."NOC" = "CM"."NOC"
+GROUP BY "Ath"."NOC", "CM"."Region"
+ORDER BY COUNT(("Ath"."NOC", "CM"."Region")) DESC
+LIMIT 1)

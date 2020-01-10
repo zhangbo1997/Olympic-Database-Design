@@ -1,0 +1,13 @@
+WITH "ALL" AS ((SELECT * FROM public."Award" "A")
+UNION
+(SELECT *, 'NA' FROM public."NoAward" "NA"))
+
+
+SELECT "G".*, "IND"."count"
+FROM
+(SELECT "QG"."Game_ID", COUNT(DISTINCT "Ath"."new_ID")
+FROM "ALL", (SELECT * FROM public."Game" "G" WHERE "G"."Year" >= 1947) "QG", public."Athlete" "Ath"
+WHERE "ALL"."Game_ID" = "QG"."Game_ID" AND "Ath"."NOC" = 'IND' AND "Ath"."new_ID" = "ALL"."new_ID"
+GROUP BY "QG"."Game_ID") "IND", public."Game" "G"
+WHERE "IND"."Game_ID" = "G"."Game_ID"
+ORDER BY "Year"

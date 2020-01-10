@@ -1,0 +1,26 @@
+WITH "TT" AS (SELECT "NC"."NOC", "Region", "count"
+FROM
+(
+SELECT "NOC", COUNT("NOC")
+FROM public."Athlete" "Ath"
+WHERE "Ath"."new_ID" in
+((
+SELECT "A"."new_ID" FROM public."Award" "A" 
+WHERE "A"."Game_ID" = (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year" = 1992  AND "G"."City" = 'Barcelona')
+)UNION(
+SELECT "N"."new_ID" FROM public."NoAward" "N" 
+WHERE "N"."Game_ID" = (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year" = 1992  AND "G"."City" = 'Barcelona')
+))
+GROUP BY "NOC"
+) "NC", public."CountryMapping" "CP" 
+WHERE "NC"."NOC" = "CP"."NOC"
+)
+
+(SELECT * FROM "TT")
+UNION
+(
+SELECT "CP"."NOC", "CP"."Region", 0
+FROM public."CountryMapping" "CP"
+WHERE "CP"."NOC" NOT IN (SELECT "TT"."NOC" FROM "TT")
+)
+ORDER BY "count" DESC

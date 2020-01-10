@@ -1,0 +1,5 @@
+SELECT "Year","Medal",COUNT(("Year","Medal"))
+FROM public."Award" "A", public."Game" "G", public."Athlete" "Ath"
+WHERE "Ath"."Name" = 'Michael Fred Phelps, II' AND "A"."new_ID" = "Ath"."new_ID" AND "A"."Game_ID" = "G"."Game_ID" 
+GROUP BY "G"."Year", "Medal"
+ORDER BY "G"."Year", "Medal"

@@ -1,0 +1,4 @@
+SELECT "Ath"."new_ID","Ath"."Name","A"."Event","A"."Medal","CM"."Region"
+FROM public."SportMapping" "SM", public."Game" "G", public."Award" "A", public."Athlete" "Ath", public."CountryMapping" "CM"
+WHERE "SM"."Sport" = 'Swimming' AND "SM"."Event" = "A"."Event" AND "A"."Game_ID" = "G"."Game_ID" AND "G"."Year" = 2004 AND "A"."new_ID" = "Ath"."new_ID" AND "Ath"."NOC" = "CM"."NOC"
+

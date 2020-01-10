@@ -1,0 +1,11 @@
+WITH "ALL" AS ((SELECT * FROM public."Award" "A" WHERE "A"."Game_ID" IN (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year">=1900))
+UNION
+(SELECT *, 'NA' FROM public."NoAward" "NA"WHERE "NA"."Game_ID" IN (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year">=1900)))
+
+SELECT * 
+FROM public."Athlete" "Ath"
+WHERE "Ath"."new_ID" IN
+(SELECT "new_ID"
+FROM "ALL"
+GROUP BY "ALL"."Game_ID", "ALL"."new_ID"
+HAVING COUNT(*) > 4)

@@ -1,0 +1,16 @@
+WITH "ALL" AS ((SELECT * FROM public."Award" "A" WHERE "A"."Game_ID" IN (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year">=1940))
+UNION
+(SELECT *, 'NA' FROM public."NoAward" "NA"WHERE "NA"."Game_ID" IN (SELECT "G"."Game_ID" FROM public."Game" "G" WHERE "G"."Year">=1940)))
+
+SELECT "Year", SUM("QG"."count")
+FROM
+(SELECT "Game_ID", COUNT("Game_ID")
+FROM
+(SELECT "ALL"."Game_ID", "ALL"."new_ID", COUNT(("ALL"."Game_ID", "ALL"."new_ID"))
+FROM "ALL"
+GROUP BY "ALL"."Game_ID", "ALL"."new_ID"
+HAVING COUNT(("ALL"."Game_ID", "ALL"."new_ID")) >= 3) "Q"
+GROUP BY "Q"."Game_ID") "QG", public."Game" "G"
+WHERE "G"."Game_ID" = "QG"."Game_ID"
+GROUP BY "Year"
+ORDER BY "Year"

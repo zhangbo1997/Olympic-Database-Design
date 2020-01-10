@@ -1,0 +1,23 @@
+Assumptions:
+1)
+Athletes can represent different countries, have different names, different sex when they participates in different Olympic games.
+
+Thus I create new IDs for each athlete in order to meet those assumptions.
+
+2)
+Each Olympic game is determined by the year, season and the hosting city.
+
+3)
+In an event of one Olympic Game, one athlete can only win one medal. Thus, I dropped the lower medal awarded if the athlete have won more than one medals in the same event in an Olympic Game.
+
+4)
+One athlete in one Olympic Game must join at least one events.
+
+5)
+Not all countries participates in all Olympic games.
+
+6)
+For a game hosted in different city but same year and same season, we consider them to be different games with different game_ID.
+
+7)
+For Q9, I assume the "maintained their standing across three games" to be that the athlete in the same event have improved or maintained his medals (not null) over three consecutive seasonal Olympic game (with a gap of 4 years).

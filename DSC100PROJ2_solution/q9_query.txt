@@ -1,0 +1,43 @@
+WITH "AG" AS (
+SELECT "A".*, "G"."Year"
+FROM public."Game" "G", public."Award" "A"
+WHERE "G"."Game_ID" = "A"."Game_ID" AND "G"."Year" > 1940
+)
+
+SELECT DISTINCT "Ath"."Name" FROM
+(SELECT *,
+CASE "Medal" WHEN 'Gold' THEN 3 WHEN 'Silver' THEN 2 WHEN 'Bronze' THEN 1 END AS "this_Medal",
+CASE "last_game_medal" WHEN 'Gold' THEN 3 WHEN 'Silver' THEN 2 WHEN 'Bronze' THEN 1 END AS "last_medal",
+CASE "last_last_game_medal" WHEN 'Gold' THEN 3 WHEN 'Silver' THEN 2 WHEN 'Bronze' THEN 1 END AS "last_last_medal"
+FROM
+(SELECT "new_ID","Event","Year", "Medal", 
+LAG ("AG"."Medal", 1) OVER (
+PARTITION BY "new_ID", "Event"
+ORDER BY "Year"
+) "last_game_medal",
+LAG ("AG"."Medal", 2) OVER (
+PARTITION BY "new_ID", "Event"
+ORDER BY "Year"
+) "last_last_game_medal",
+"AG"."Year" - LAG ("AG"."Year", 1) OVER (
+PARTITION BY "new_ID", "Event"
+ORDER BY "Year"
+) AS "Year_DIFF1",
+LAG ("AG"."Year", 1) OVER (
+PARTITION BY "new_ID", "Event"
+ORDER BY "Year"
+) - LAG ("AG"."Year", 2) OVER (
+PARTITION BY "new_ID", "Event"
+ORDER BY "Year"
+) AS "Year_DIFF2"
+FROM "AG") "FT"
+WHERE "FT" NOTNULL AND "FT"."Year_DIFF1" = 4 AND "FT"."Year_DIFF2" = 4 ) "FF", public."Athlete" "Ath"
+WHERE "FF"."this_Medal" >= "FF"."last_medal"  AND "FF"."last_medal" >= "FF"."last_last_medal" AND "FF"."new_ID" = "Ath"."new_ID"
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+WITH "GID" AS (SELECT "G"."Game_ID"
+FROM public."Game" "G"
+WHERE "G"."City" = 'Vancouver' AND "G"."Year" = 2010)
+
+SELECT DISTINCT "CM"."Region" FROM
+((SELECT "A"."new_ID"
+FROM public."Award" "A"
+WHERE "A"."Game_ID" = (SELECT * FROM "GID") AND "A"."Event" IN (SELECT "SM"."Event"
+FROM public."SportMapping" "SM"
+WHERE "SM"."Sport" = 'Curling'))
+UNION
+(SELECT "N"."new_ID"
+FROM public."NoAward" "N"
+WHERE "N"."Game_ID" = (SELECT * FROM "GID") AND "N"."Event" IN (SELECT "SM"."Event"
+FROM public."SportMapping" "SM"
+WHERE "SM"."Sport" = 'Curling'))) "DD", public."Athlete" "A", public."CountryMapping" "CM"
+WHERE "A"."new_ID" = "DD"."new_ID" AND "A"."NOC" = "CM"."NOC"
